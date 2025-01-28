@@ -26,6 +26,7 @@ public class FireIncidentSubsystem implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             try {
                 FireEvent response = scheduler.getDroneResponse();
                 if (response != null) {

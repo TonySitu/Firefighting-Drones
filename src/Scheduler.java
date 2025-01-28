@@ -5,14 +5,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Scheduler implements Runnable {
     // Queue for tasks from the Fire Incident Subsystem and Drones
     private FireEvent fireEvent;
-    private final BlockingQueue<FireEvent> droneResponseQueue = new LinkedBlockingQueue<>();
+    private FireEvent responseEvent;
     private boolean hasTask = false;
-    private boolean hasResponses = false;
+    private boolean hasResponse = false;
 
     // Submit a fire event from the Fire Incident Subsystem -> Drone to scheduler
     public synchronized void submitFireEvent(FireEvent event) {
         try {
-            if (hasTask) {
+            if (hasTask) { // If a task already exists
                 wait();
             }
         } catch (InterruptedException ignored) {
@@ -26,14 +26,35 @@ public class Scheduler implements Runnable {
     }
 
     // Allow a drone to request a task
-    public synchronized FireEvent requestTask() {
+    public synchronized FireEvent requestTask() throws InterruptedException {
+        if (!hasTask) { // Wait until a task is available
+            wait();
+        }
+        FireEvent eventToSend = fireEvent;
+        fireEvent = null;
+        if (fireEvent == null) {
+            hasTask = false;
+        }
+        System.out.println("[Scheduler] Drone retrieved task");
+        notifyAll(); // Notify any other threads that might be waiting
 
-        return null;
+        return eventToSend;
     }
 
     // Submit a response from a drone back to the Scheduler
     public synchronized void submitDroneResponse(FireEvent event) {
-        // Add drone response to the result queue
+        try {
+            if (hasResponse) {
+                wait();
+            }
+        } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
+        }
+
+        hasResponse = true;
+        responseEvent = event;
+        System.out.println("[Scheduler] received event");
+        notifyAll();
     }
 
     // Get task completion results for the Fire Incident Subsystem

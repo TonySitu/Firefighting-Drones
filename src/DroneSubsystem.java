@@ -1,8 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
-// DroneSubsystem class representing a drone that interacts with the Scheduler
 public class DroneSubsystem implements Runnable {
 
     private final Scheduler scheduler;
@@ -15,15 +11,16 @@ public class DroneSubsystem implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
+                System.out.println("[Drone] Requesting task");
                 FireEvent task = scheduler.requestTask();
                 if (task != null) {
-                    System.out.println("Drone received task: " + task);
+                    System.out.println("[Drone] received task");
 
                     Thread.sleep(2000); // Simulating work by sleeping
 
                     // Acknowledge task completion
                     scheduler.submitDroneResponse(task);
-                    System.out.println("Drone completed task: " + task);
+                    System.out.println("[Drone] completed task");
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Preserve interrupt status

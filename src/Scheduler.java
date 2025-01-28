@@ -11,29 +11,39 @@ public class Scheduler implements Runnable {
     }
 
     // Submit a fire event from the Fire Incident Subsystem
-    public void submitFireEvent(FireEvent event) {
+    public synchronized void submitFireEvent(FireEvent event) {
         // Add fire event to the task queue
     }
 
     // Allow a drone to request a task
-    public FireEvent requestTask() {
+    public synchronized FireEvent requestTask() {
         // Return a fire event for a drone
         return null;
     }
 
     // Submit a response from a drone back to the Scheduler
-    public void submitDroneResponse(FireEvent event) {
+    public synchronized void submitDroneResponse(FireEvent event) {
         // Add drone response to the result queue
     }
 
     // Get task completion results for the Fire Incident Subsystem
-    public FireEvent getDroneResponse() {
+    public synchronized FireEvent getDroneResponse() {
         // Return the result of a drone task
         return null;
     }
 
     @Override
     public void run() {
-        // Scheduler logic to manage communications between fire incident subsystem and drones
+        System.out.println("Scheduler is running...");
+        // Currently, it just manages the communication as a pass-through
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                wait();
+            } catch (Exception e) {
+                System.err.println("Error in Scheduler: " + e.getMessage());
+            }
+        }
+
+        System.out.println("Scheduler has stopped.");
     }
 }

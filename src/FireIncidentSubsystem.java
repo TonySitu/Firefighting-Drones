@@ -20,10 +20,20 @@ public class FireIncidentSubsystem implements Runnable {
                     if (parts.length == 4) {
                         FireEvent event = new FireEvent(parts[0].trim(), parts[1].trim(), parts[2].trim(), Integer.parseInt(parts[3].trim()));
                         scheduler.submitFireEvent(event);
+                        System.out.println("[FireIncidentSubsystem] submitted fire event");
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            try {
+                FireEvent response = scheduler.getDroneResponse();
+                if (response != null) {
+                    System.out.println("Fire Incident Subsystem received response: " + response);
+                }
+                Thread.sleep(1000); // Check every second
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Preserve interrupt status
             }
         }
     }

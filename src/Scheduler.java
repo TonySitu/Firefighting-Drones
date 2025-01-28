@@ -4,15 +4,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 // Scheduler class acts as the server for communication between Fire Incident Subsystem and Drones
 public class Scheduler implements Runnable {
     // Queue for tasks from the Fire Incident Subsystem and Drones
-    private final BlockingQueue<FireEvent> fireIncidentQueue = new LinkedBlockingQueue<>();
+    private FireEvent fireEvent;
     private final BlockingQueue<FireEvent> droneResponseQueue = new LinkedBlockingQueue<>();
-
-    public Scheduler() {
-    }
+    private boolean hasTask = false;
+    private boolean hasResponses = false;
 
     // Submit a fire event from the Fire Incident Subsystem -> Drone to scheduler
     public synchronized void submitFireEvent(FireEvent event) {
-        // Add fire event to the task queue
+        try {
+            if (hasTask) {
+                wait();
+            }
+        } catch (InterruptedException ignored) {
+            Thread.currentThread().isInterrupted();
+        }
+
+        fireEvent = event;
+        hasTask = true;
+        System.out.println("[Scheduler] received event");
+        notifyAll();
     }
 
     // Allow a drone to request a task

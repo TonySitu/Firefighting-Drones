@@ -16,7 +16,7 @@ public class Scheduler implements Runnable {
                 wait();
             }
         } catch (InterruptedException ignored) {
-            Thread.currentThread().isInterrupted();
+            Thread.currentThread().interrupt();
         }
 
         fireEvent = event;
@@ -27,7 +27,7 @@ public class Scheduler implements Runnable {
 
     // Allow a drone to request a task
     public synchronized FireEvent requestTask() {
-        // Return a fire event for a drone
+
         return null;
     }
 

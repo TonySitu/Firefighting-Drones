@@ -10,7 +10,7 @@ public class Scheduler implements Runnable {
     public Scheduler() {
     }
 
-    // Submit a fire event from the Fire Incident Subsystem
+    // Submit a fire event from the Fire Incident Subsystem -> Drone to scheduler
     public synchronized void submitFireEvent(FireEvent event) {
         // Add fire event to the task queue
     }

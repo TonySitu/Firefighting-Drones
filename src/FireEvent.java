@@ -14,4 +14,10 @@ public class FireEvent {
     }
 
     // Getters and Setters (if necessary)
+
+    @Override
+    public String toString() {
+        return String.format("Time: %s, Zone: %s, Event: %s, Severity: %d",
+                time, zoneId, eventType, severity);
+    }
 }
